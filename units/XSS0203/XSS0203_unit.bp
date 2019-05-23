@@ -348,11 +348,9 @@ UnitBlueprint {
             SlavedToBodyArcRange = 10,
             TargetCheckInterval = 1.5,
             TargetPriorities = {
-                'SPECIALHIGHPRI',
                 'SUBMERSIBLE',
                 'STRUCTURE DEFENSE',
                 'MOBILE',
-                'SPECIALLOWPRI',
                 'ALLUNITS',
             },
             TargetRestrictDisallow = 'UNTARGETABLE, HOVER',
@@ -462,9 +460,7 @@ UnitBlueprint {
             ReTargetOnMiss = true,
             TargetCheckInterval = 0.3,
             TargetPriorities = {
-                'SPECIALHIGHPRI',
                 'NAVAL MOBILE',
-                'SPECIALLOWPRI',
                 'ALLUNITS',
             },
             TargetRestrictDisallow = 'UNTARGETABLE',
