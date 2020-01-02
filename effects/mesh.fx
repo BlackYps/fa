@@ -2864,11 +2864,11 @@ float4 UnitFalloffPS_02( NORMALMAPPED_VERTEX vertex, uniform bool hiDefShadows) 
     // Calculate environment map reflection
     float reflectivity = saturate(specular.r * 2.5); // Reduce artifacts of texture
     environment *= reflectivity * fallOff.a;
-    // float3 phongMultiplicative = light * environment * (1 - (diffuse.a * 0.5) ) * 0.7;
     
     // Makes reflection more intense depending on the diffuse color. Could be cool, but
     // looks like shit because the diffuse texture is not interpolated for unknown reasons
     // TODO: find out why the diffuse texture is not interpolated
+    // float3 phongMultiplicative = light * environment * (1 - (diffuse.a * 0.5) ) * 0.7;
     // float Amount = (diffuse.r + diffuse.g + diffuse.b) / 3;
     // Amount = 1.0 - pow(Amount, 0.3);
     // phongMultiplicative *= (float3(0.5, 0.7, 0.9) + Amount);
