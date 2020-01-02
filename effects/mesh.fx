@@ -2847,9 +2847,9 @@ float4 UnitFalloffPS_02( NORMALMAPPED_VERTEX vertex, uniform bool hiDefShadows) 
     float4 specular = tex2D( specularSampler, vertex.texcoord0.xy);
     float3 environment = texCUBE( environmentSampler, reflect( -vertex.viewDirection, normal));
 
-    // Calculate lookup into falloff ramp
+    // Calculate lookup texture into falloff ramp
     float NdotV = pow(1 - saturate(dot( normalize(vertex.viewDirection), normal )), 0.6);
-    float4 fallOff = tex2D( falloffSampler, float2(NdotV,vertex.material.x));
+    float4 fallOff = tex2D(falloffSampler, float2(NdotV,vertex.material.x));
 
     // Calculate lighting and shadows
     float shadow = ComputeShadow( vertex.shadow, hiDefShadows);
@@ -2876,13 +2876,13 @@ float4 UnitFalloffPS_02( NORMALMAPPED_VERTEX vertex, uniform bool hiDefShadows) 
     // Amount = 1.0 - pow(Amount, 0.3);
     // phongMultiplicative *= (float3(0.5, 0.7, 0.9) + Amount);
     
-    float3 teamColSpec = NdotV * vertex.color.rgb * 2;
+    float3 teamColor = fallOff.g * vertex.color.rgb * 2;
     // There are also white highlights in the diffuse texture in some models
     float whiteness = light * saturate(diffuse.rgb - float3 (0.4,0.4,0.4));
     
     // Combine all previous computations
     float3 color = (diffuse.rgb + float3(0.25,0.35,0.45)) * light * (1 - diffuse.a) * 0.4;
-    color += float3(0.5,0.6,0.7) * (phongAdditive + environment) + (teamColSpec.rgb * diffuse.a) + whiteness;
+    color += float3(0.5,0.6,0.7) * (phongAdditive + environment) + (teamColor * diffuse.a) + whiteness;
     
     // Substitute all the computations on pure glowing parts with the pure brightness texture
     // to get rid of reflections and shadows
@@ -2891,9 +2891,9 @@ float4 UnitFalloffPS_02( NORMALMAPPED_VERTEX vertex, uniform bool hiDefShadows) 
     color += specular.b * 2 * mask;
 
     // Bloom is only rendered where alpha > 0
-    float teamColGlow = (vertex.color.r + vertex.color.g + vertex.color.b) / 3;
-    teamColGlow = diffuse.a * (1 - teamColGlow) * 0.06;
-    float alpha = mirrored ? 0.5 : specular.b * 0.4 + teamColGlow;
+    float teamColorGlow = (vertex.color.r + vertex.color.g + vertex.color.b) / 3;
+    teamColGlow = diffuse.a * (1 - teamColorGlow) * 0.06;
+    float alpha = mirrored ? 0.5 : specular.b * 0.4 + teamColorGlow;
     
     return float4( color, alpha );
 }
