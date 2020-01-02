@@ -2860,12 +2860,14 @@ float4 UnitFalloffPS_02( NORMALMAPPED_VERTEX vertex, uniform bool hiDefShadows) 
     float3 reflection = reflect(sunDirection, normal);
     float specularAmount = saturate( dot( reflection, -vertex.viewDirection));
     float3 phongAdditive = pow(specularAmount, 15) * (specular.g - 0.5) * shadow * 2.2 * sunDiffuse;
+    // Maybe substitute shadow * sunDiffuse with light to have easier control
+    // and have sunambient and shadowfill also play a role
 
     // Calculate environment map reflection
     float reflectivity = saturate(specular.r * 2.5); // Reduce artifacts of texture
     environment *= reflectivity * fallOff.a;
     
-    //experimental stripes on world reflection
+    // Experimental stripes on world reflection
     environment *= (specular.g - 0.5) * 4.0;
     
     // Makes reflection more intense depending on the diffuse color. Could be cool, but
@@ -2882,7 +2884,8 @@ float4 UnitFalloffPS_02( NORMALMAPPED_VERTEX vertex, uniform bool hiDefShadows) 
     
     // Combine all previous computations
     float3 color = (diffuse.rgb + float3(0.25,0.35,0.45)) * light * (1 - diffuse.a) * 0.4;
-    color += float3(0.5,0.6,0.7) * (phongAdditive + environment) + (teamColor * diffuse.a) + whiteness;
+    color += float3(0.5,0.6,0.7) * (phongAdditive + environment)
+    color += (teamColor * diffuse.a) + whiteness;
     
     // Substitute all the computations on pure glowing parts with the pure brightness texture
     // to get rid of reflections and shadows
@@ -2892,7 +2895,7 @@ float4 UnitFalloffPS_02( NORMALMAPPED_VERTEX vertex, uniform bool hiDefShadows) 
 
     // Bloom is only rendered where alpha > 0
     float teamColorGlow = (vertex.color.r + vertex.color.g + vertex.color.b) / 3;
-    teamColGlow = diffuse.a * (1 - teamColorGlow) * 0.06;
+    teamColorGlow = diffuse.a * (1 - teamColorGlow) * 0.06;
     float alpha = mirrored ? 0.5 : specular.b * 0.4 + teamColorGlow;
     
     return float4( color, alpha );
