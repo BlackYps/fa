@@ -2859,11 +2859,14 @@ float4 UnitFalloffPS_02( NORMALMAPPED_VERTEX vertex, uniform bool hiDefShadows) 
     // Calculate specular highlights of the sun
     float3 reflection = reflect(sunDirection, normal);
     float specularAmount = saturate( dot( reflection, -vertex.viewDirection));
-    float3 phongAdditive = pow(specularAmount, 15) * (specular.g - 0.5) * shadow * 2.2;
+    float3 phongAdditive = pow(specularAmount, 15) * (specular.g - 0.5) * shadow * 2.2 * sunDiffuse;
 
     // Calculate environment map reflection
     float reflectivity = saturate(specular.r * 2.5); // Reduce artifacts of texture
     environment *= reflectivity * fallOff.a;
+    
+    //experimental stripes on world reflection
+    environment *= (specular.g - 0.5) * 4.0;
     
     // Makes reflection more intense depending on the diffuse color. Could be cool, but
     // looks like shit because the diffuse texture is not interpolated for unknown reasons
@@ -2878,8 +2881,8 @@ float4 UnitFalloffPS_02( NORMALMAPPED_VERTEX vertex, uniform bool hiDefShadows) 
     float whiteness = light * saturate(diffuse.rgb - float3 (0.4,0.4,0.4));
     
     // Combine all previous computations
-    float3 color = (diffuse.rgb + float3 (0.25,0.35,0.45)) * light * (1 - diffuse.a) * 0.4;
-    color += phongAdditive + environment + (teamColSpec.rgb * diffuse.a) + whiteness;
+    float3 color = (diffuse.rgb + float3(0.25,0.35,0.45)) * light * (1 - diffuse.a) * 0.4;
+    color += float3(0.5,0.6,0.7) * (phongAdditive + environment) + (teamColSpec.rgb * diffuse.a) + whiteness;
     
     // Substitute all the computations on pure glowing parts with the pure brightness texture
     // to get rid of reflections and shadows
