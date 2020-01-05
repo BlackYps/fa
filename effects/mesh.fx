@@ -2884,7 +2884,7 @@ float4 UnitFalloffPS_02( NORMALMAPPED_VERTEX vertex, uniform bool hiDefShadows) 
     
     // Combine all previous computations
     float3 color = (diffuse.rgb + float3(0.25,0.35,0.45)) * light * (1 - diffuse.a) * 0.4;
-    color += float3(0.5,0.6,0.7) * (phongAdditive + environment)
+    color += float3(0.5,0.6,0.7) * (phongAdditive + environment);
     color += (teamColor * diffuse.a) + whiteness;
     
     // Substitute all the computations on pure glowing parts with the pure brightness texture
