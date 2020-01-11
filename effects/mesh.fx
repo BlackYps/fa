@@ -2880,7 +2880,7 @@ float4 UnitFalloffPS_02( NORMALMAPPED_VERTEX vertex, uniform bool hiDefShadows) 
     
     float3 teamColor = fallOff.g * vertex.color.rgb * 2;
     // There are also white highlights in the diffuse texture in some models
-    float whiteness = light * saturate(diffuse.rgb - float3 (0.4,0.4,0.4));
+    float3 whiteness = light * saturate(diffuse.rgb - float3 (0.4,0.4,0.4));
     
     // Combine all previous computations
     float3 color = (diffuse.rgb + float3(0.25,0.35,0.45)) * light * (1 - diffuse.a) * 0.4;
